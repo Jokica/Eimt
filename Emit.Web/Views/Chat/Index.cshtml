@@ -1,0 +1,32 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1 class="text-center h1 bg-info text-white p-3">Chat</h1>
+
+<section class="container">
+    <div class="row " id="chat">
+        <div class="col-md-4 " style="background:#ddd" >
+            <h2 class="text-center">All Chats</h2>
+            <div id="chat-control" class="bg-light">
+                <h2 class="chat-name chat-active">Public</h2>
+                <h2 class="chat-name ">Public</h2>
+                <h2 class="chat-name ">Public</h2>
+            </div>
+        </div>
+        <div class="col-md-8 " id="chat-display">
+            <div id="chat-history">
+            </div>
+           <form class="chat-form input-group mb-3">
+               <input type="text" id="chat-input" class="form-control" placeholder="New Message...">
+              <div class="input-group-append">
+                <button class="btn btn-primary" type="submit" id="chat-send">Send</button>
+              </div>
+           </form>
+        </div>
+    </div>
+</section>
+@section Scripts{ 
+    <script src="~/js/chat-menager.js"></script>
+}
