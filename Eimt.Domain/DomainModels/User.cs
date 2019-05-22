@@ -1,4 +1,4 @@
-﻿using Eimt.Domain.DomainDTOs;
+using Eimt.Domain.DomainDTOs;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
@@ -22,6 +22,7 @@ namespace Eimt.Domain.DomainModels
             SetPassword(password);
             AccessCount = 0;
             Token = new UserConfirmationToken(this, new Guid().ToString().Substring(0, 8));
+            Roles = new List<UserRoles>();
         }
         private User()
         {

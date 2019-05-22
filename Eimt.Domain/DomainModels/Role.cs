@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -13,6 +13,7 @@ namespace Eimt.Domain.DomainModels
         public Role(string name)
         {
             Name = name;
+            Users = new List<UserRoles>();
         }
         private Role()
         {

@@ -1,4 +1,4 @@
-﻿using Eimt.Application.Interfaces;
+using Eimt.Application.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,43 +11,44 @@ namespace Eimt.DAL.Repository
     public class BaseRepository<TEntity, TKey> : IRepository<TEntity,TKey> where TEntity : class
     {
         private readonly DbContext context;
+        private readonly DbSet<TEntity> entities;
 
         public BaseRepository(DbContext context)
         {
             this.context = context ?? throw new ArgumentNullException(nameof(context));
+            entities = context.Set<TEntity>();
         }
         public void Add(TEntity user)
         {
-            context.Add(user);
+            entities.Add(user);
         }
 
         public TEntity Find(TKey Id)
         {
-            return context.Set<TEntity>().Find(Id);
+            return entities.Find(Id);
         }
 
         public TEntity Find(TKey Id, params Expression<Func<TEntity, object>>[] includes)
         {
-            var result = context.Set<TEntity>();
             foreach(var include in includes)
             {
-                result.Include(include);
+                entities.Include(include);
             }
-            return result.Find(Id);
+            return entities.Find(Id);
         }
         public TEntity FirstOrDefualt(Expression<Func<TEntity, bool>> Predicate)
         {
-            return context.Set<TEntity>().FirstOrDefault(Predicate);
+            return entities.FirstOrDefault(Predicate);
         }
 
         public void Remove(TEntity entity)
         {
-             context.Set<TEntity>().Remove(entity);
+            entities.Remove(entity);
         }
 
         public IEnumerable<TEntity> Where(Expression<Func<TEntity, bool>> Predicate)
         {
-            return context.Set<TEntity>().Where(Predicate);
+            return entities.Where(Predicate);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Eimt.Application.Interfaces;
+using Eimt.Application.Interfaces;
 using Eimt.Domain.DomainModels;
 using Quartz;
 using System;
@@ -21,9 +21,8 @@ namespace Eimt.Application.Jobs
         {
             var repository = unitOfWork.CreateRepository<UserConfirmationToken, long>();
             var tokens = repository
-                            .Where(x => x.CreateAt.AddDays(1) >= DateTime.Now)
-                            .ToList();
-            if (tokens.Count > 0)
+                            .Where(x => x.CreateAt.AddMinutes(1) >= DateTime.Now);
+            if (tokens.Any())
             {
                 var transation = unitOfWork.CreateTransaction();
                 try

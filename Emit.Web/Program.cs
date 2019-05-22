@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
@@ -18,8 +18,9 @@ namespace Emit.Web
     {
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Run();
+           var host = CreateWebHostBuilder(args).Build();
             ConfigureJobsAsync().GetAwaiter().GetResult();
+            host.Run();
         }
 
         private static async Task ConfigureJobsAsync()
@@ -40,7 +41,7 @@ namespace Emit.Web
                                     .WithIdentity("triger1", "group1")
                                     .StartNow()
                                     .WithSimpleSchedule(x => 
-                                            x.WithIntervalInHours(24)
+                                            x.WithIntervalInSeconds(10)
                                             .RepeatForever())
                                     .Build();
                 await scheduler.ScheduleJob(job,trigger);

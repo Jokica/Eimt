@@ -1,4 +1,4 @@
-﻿using Eimt.Application.Interfaces;
+using Eimt.Application.Interfaces;
 using Eimt.Application.Interfaces.Models.EmailModels;
 using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Http;
@@ -89,10 +89,10 @@ namespace EiMT.Infrastructure.EmailSender
             {
                 client.ServerCertificateValidationCallback = ValidationCallBack;
 
-                await client.ConnectAsync("smtp.live.com", 587, false).ConfigureAwait(false);
-                await client.AuthenticateAsync(Configuration.Email, Configuration.Password).ConfigureAwait(false);
-                await client.SendAsync(email).ConfigureAwait(false);
-                await client.DisconnectAsync(true).ConfigureAwait(false);
+                await client.ConnectAsync("smtp.live.com", 587, false);
+                await client.AuthenticateAsync(Configuration.Email, Configuration.Password);
+                await client.SendAsync(email);
+                await client.DisconnectAsync(true);
             }
         }
 

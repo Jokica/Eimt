@@ -1,4 +1,4 @@
-﻿using Eimt.Application.Interfaces;
+using Eimt.Application.Interfaces;
 using Eimt.Application.Interfaces.Dtos;
 using Eimt.Application.Services.Dtos;
 using Eimt.Application.Services.ResultModels;
@@ -17,13 +17,11 @@ namespace Eimt.Application.Services.Impl
         private readonly IUnitOfWork unitOfWork;
         private readonly IMessageSender messageSender;
         private readonly IRoleService roleService;
-        private readonly IUserManager userManager;
 
-        public UserService(IUnitOfWork unitOfWork,IUserManager userManager,IMessageSender messageSender,IRoleService roleService)
+        public UserService(IUnitOfWork unitOfWork,IMessageSender messageSender,IRoleService roleService)
         {
             repository = unitOfWork.UserRepository;
             this.unitOfWork = unitOfWork;
-            this.userManager = userManager;
             this.messageSender = messageSender;
             this.roleService = roleService;
         }
@@ -41,10 +39,14 @@ namespace Eimt.Application.Services.Impl
         }
         public async Task RegisterNewUser(UserDto userDto)
         {
+            using (var transaction = unitOfWork.CreateTransaction())
+            {
                 var user = new User(userDto.Email, userDto.Password);
-                await messageSender.SendConfirmationToken(userDto.Email, user.Token.SecurityStamp);
                 repository.Add(user);
                 unitOfWork.Commit();
+                await messageSender.SendConfirmationToken(userDto.Email, user.Token.SecurityStamp);
+                transaction.Commit();
+            }
         }
         public ChangePasswordResult ChangePassword(ChangePasswordDto changePasswordDto)
         {
