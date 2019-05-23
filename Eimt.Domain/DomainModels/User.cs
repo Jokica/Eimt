@@ -15,6 +15,10 @@ namespace Eimt.Domain.DomainModels
         public string Email { get;  set; }
         public List<UserRoles> Roles { get; set; }
         public string Password { get; private set; }
+        public Sector Sector { get; set; }
+        public Sector ManagesSector { get; set; }
+        public long? SectorId { get; set; }
+
 
         public User(string email, string password)
         {

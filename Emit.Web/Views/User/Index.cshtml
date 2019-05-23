@@ -1,0 +1,55 @@
+@model IEnumerable<Eimt.Application.Services.ViewModels.UserDto>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1 class="pb-5 mt-5 text-center">Users</h1>
+
+<table class="table table-hover table-info table-striped ">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Sector)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsConfirmed)
+            </th>
+            <th>Edit/Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Sector)
+            </td>
+
+            <td>
+                @if (item.IsConfirmed)
+                {
+                    <div class="pl-4">
+                        <i class="fas fa-user-check" style="font-size:2em;color:forestgreen"></i>
+                    </div>
+                }
+                else
+                {
+                    <div class="pl-4">
+                        <i class="fas fa-user-times" style="font-size:2em;color:crimson"></i>
+                    </div>
+                }
+            </td>
+            <td>
+                <a asp-action="Edit" asp-controller="User"><i class="fas fa-user-edit" style="font-size:2em;color:forestgreen"></i></a>
+                <a asp-action="Delete" asp-controller="User"><i class='fas fa-trash-alt' style="font-size:2em;color:crimson"></i></a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

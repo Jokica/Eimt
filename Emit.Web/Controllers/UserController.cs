@@ -1,11 +1,14 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Eimt.Application.Interfaces;
 using Eimt.Application.Interfaces.Dtos;
 using Eimt.Application.Services;
+using Eimt.Application.Services.ViewModels;
+using Emit.Web.ClaimsPrincipalExtensions;
 using Emit.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Emit.Web.Controllers
@@ -47,7 +50,7 @@ namespace Emit.Web.Controllers
         {
             return View();
         }
-        public IActionResult Register(UserDto user)
+        public IActionResult Register(RegisterUserDto user)
         {
             userService.RegisterNewUser(user);
             return View();
@@ -65,13 +68,25 @@ namespace Emit.Web.Controllers
                 return RedirectToAction("Login");
             return View();
         }
+        [Authorize]
         public IActionResult Profile()
         {
             return View();
         }
+        [Authorize]
         public IActionResult Index()
         {
-            return View();
+            IEnumerable<UserDto> users = new List<UserDto>();
+            if (User.IsAdmin())
+            {
+                users = userService.GetUsers();
+            }
+            else if (User.IsMenager())
+            {
+                users = userService.GetUsersBySector(User.GetSector());
+            }
+         
+            return View(users);
         }
     }
 }

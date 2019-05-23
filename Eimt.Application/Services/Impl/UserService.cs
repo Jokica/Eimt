@@ -1,11 +1,14 @@
+using Eimt.Application.Extensions;
 using Eimt.Application.Interfaces;
 using Eimt.Application.Interfaces.Dtos;
 using Eimt.Application.Services.Dtos;
 using Eimt.Application.Services.ResultModels;
+using Eimt.Application.Services.ViewModels;
 using Eimt.Domain;
 using Eimt.Domain.DomainModels;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -37,7 +40,7 @@ namespace Eimt.Application.Services.Impl
                 Success = true
             };
         }
-        public async Task RegisterNewUser(UserDto userDto)
+        public async Task RegisterNewUser(RegisterUserDto userDto)
         {
             using (var transaction = unitOfWork.CreateTransaction())
             {
@@ -82,6 +85,20 @@ namespace Eimt.Application.Services.Impl
             if (res)
                 unitOfWork.Commit();
             return res;
+        }
+
+        public IEnumerable<UserDto> GetUsers()
+        {
+            return repository
+                .FindAllUsersWithRoles()
+                .Select(x=>x.ToDto());
+        }
+
+        public IEnumerable<UserDto> GetUsersBySector(string sector)
+        {
+            return repository
+                   .FindSectorUsersWithRoles(sector)
+                   .Select(x => x.ToDto());
         }
     }
 }

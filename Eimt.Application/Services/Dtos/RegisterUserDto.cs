@@ -1,8 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Eimt.Application.Interfaces.Dtos
 {
-    public class UserDto
+    public class RegisterUserDto
     {
        
         [Compare("Password",ErrorMessage ="Passwords must match")]

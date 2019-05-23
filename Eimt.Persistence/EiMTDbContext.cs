@@ -1,4 +1,4 @@
-﻿using Eimt.Domain.DomainModels;
+using Eimt.Domain.DomainModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -16,6 +16,7 @@ namespace Eimt.Persistence
         public DbSet<UserConfirmationToken> Tokens { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<UserRoles> UserRoles { get; set; }
+        public DbSet<Sector> Sectors { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -39,6 +40,13 @@ namespace Eimt.Persistence
             modelBuilder.Entity<UserConfirmationToken>()
                 .Property(x => x.CreateAt)
                 .ValueGeneratedOnAdd();
+            modelBuilder.Entity<Sector>()
+                .HasMany(x => x.Employees)
+                .WithOne(x => x.Sector);
+            modelBuilder.Entity<User>()
+                .HasOne(x => x.ManagesSector)
+                .WithOne(x => x.Menager)
+                .HasForeignKey<Sector>(x=>x.MenagerId);
 
         }
     }
