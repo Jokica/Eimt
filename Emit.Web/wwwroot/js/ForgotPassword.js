@@ -13,10 +13,10 @@ document.getElementById("forgotPasswordBtn").addEventListener("click", function 
         },
         body: JSON.stringify(data)
     }
-    fetch("/api/identity",options)
+    fetch("/api/identity", options)
         .then(x => x.json())
         .then(displayForgotPasswordResult)
-    .catch(err=>err.toString())
+        .catch(err => console.log(err.toString()));
 });
 function displayForgotPasswordResult(forgotPasswordResult) {
     console.log(forgotPasswordResult)

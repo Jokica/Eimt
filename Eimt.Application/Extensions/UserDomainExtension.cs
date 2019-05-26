@@ -16,7 +16,8 @@ namespace Eimt.Application.Extensions
                 Id = user.Id,
                 Email = user.Email,
                 IsConfirmed = user.IsEmailConfirmed,
-                Roles = user.Roles?.Select(x => x.Role?.Name).ToList() ?? new List<string>()
+                Roles = user.Roles?.Select(x => x.Role?.Name).ToList() ?? new List<string>(),
+                Sector = user.Sector?.Name ??"N/A"
             };
         }
     }

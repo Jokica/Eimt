@@ -14,7 +14,6 @@ namespace Eimt.Application.Interfaces
             string message,
             params Attacment[] attacments
             );
-        Task SendResetPasswordEmail(string email, string generatedPassword);
-        Task SendConfirmationToken(string email, string securityStamp);
+
     }
 }

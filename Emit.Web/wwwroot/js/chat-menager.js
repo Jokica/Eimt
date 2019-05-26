@@ -1,5 +1,4 @@
-﻿
-const chatConnection = new signalR.HubConnectionBuilder()
+﻿const chatConnection = new signalR.HubConnectionBuilder()
                         .withUrl('/chathub')
                         .build();
 
@@ -14,7 +13,7 @@ function sendMessage() {
     const chatInput = document.getElementById("chat-input");
     const message = chatInput.value;
     chatInput.value = "";
-    const user = localStorage.getItem("User") || "Annonomys";
+    const user = localStorage.getItem("user") || "Annonomys";
     chatConnection.invoke("SendMessage", message, user);
     displayMessage({ message, user }, true);
 }

@@ -16,5 +16,6 @@ namespace Emit.Web.Hubs
         {
             await Clients.All.SendAsync("Login","Test");
         }
+
     }
 }

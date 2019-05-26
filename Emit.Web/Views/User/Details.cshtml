@@ -1,0 +1,32 @@
+﻿@model Eimt.Application.Services.ViewModels.UserDto
+@{ 
+    Layout = null;
+
+}
+<div>
+    <dl class="pt-5 row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Sector)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Sector)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt class="col-sm-2">
+            Roles
+        </dt>
+        <dd class="col-sm-10">
+            <ul>
+                @foreach(var role in Model.Roles)
+                {
+                    <li>@role</li>
+                }
+            </ul>
+        </dd>
+    </dl>
+</div>

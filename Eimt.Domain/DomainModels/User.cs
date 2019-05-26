@@ -18,7 +18,7 @@ namespace Eimt.Domain.DomainModels
         public Sector Sector { get; set; }
         public Sector ManagesSector { get; set; }
         public long? SectorId { get; set; }
-
+        public List<Notification> Notifications { get; set; }
 
         public User(string email, string password)
         {
@@ -43,7 +43,7 @@ namespace Eimt.Domain.DomainModels
         }
         public string ResetPassword()
         {
-            var generatedPassword = new Guid().ToString().Substring(0, 8);
+            var generatedPassword = Guid.NewGuid().ToString().Substring(0, 8);
             SetPassword(generatedPassword);
             return generatedPassword;
         }

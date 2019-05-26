@@ -9,10 +9,16 @@
     <hr />
     <div class="row">
         <div class="col-md-3">
-            <partial name="_ManageNav" />
+            <ul class="nav nav-pills flex-column bg-info p-2 mt-5">
+                <li class="nav-item"><button class="nav-link text-white m-2 bg-transparent border-0" id="profile">Profile</button></li>
+                <li class="nav-item"><button class="nav-link text-white m-2 bg-transparent border-0" id="change-password">Password</button></li>
+            </ul>
         </div>
-        <div class="col-md-9">
+        <div class="offset-3 col-md-6" id="content">
         </div>
     </div>
 </div>
 
+@section  Scripts{ 
+<script src="~/js/Profile.js"></script>
+}

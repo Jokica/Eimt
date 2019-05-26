@@ -9,5 +9,7 @@ namespace Eimt.Application.Services
     {
         Role FindOrCreateDefualtRole();
         void AddUserDefualtRole(User user,bool saveChanges = false);
+        IEnumerable<string> GetUserRoles(long id);
+        IEnumerable<string> GetRoles();
     }
 }

@@ -1,4 +1,5 @@
-﻿using Eimt.Domain;
+﻿using Eimt.Application.DAL;
+using Eimt.Domain;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
@@ -8,8 +9,9 @@ namespace Eimt.Application.Interfaces
 {
     public interface IUnitOfWork
     {
-         IUserRepository UserRepository { get;  }
-         IRoleRepository RoleRepository { get; }
+        IUserRepository UserRepository { get;  }
+        ISectorRepository  SectorRepository { get;  }
+        IRoleRepository RoleRepository { get; }
         IDbContextTransaction CreateTransaction();
         IRepository<TEntity,TKey> CreateRepository<TEntity,TKey >() where TEntity:class;
         int Commit();

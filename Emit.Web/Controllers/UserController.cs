@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Eimt.Application.Interfaces;
 using Eimt.Application.Interfaces.Dtos;
 using Eimt.Application.Services;
+using Eimt.Application.Services.Dtos;
 using Eimt.Application.Services.ViewModels;
 using Emit.Web.ClaimsPrincipalExtensions;
 using Emit.Web.Models;
@@ -17,11 +19,18 @@ namespace Emit.Web.Controllers
     {
         private readonly IUserService userService;
         private readonly IUserManager userManager;
+        private readonly IRoleService roleService;
+        private readonly ISectorService sectorService;
 
-        public UserController(IUserService userService,IUserManager userManager)
+        public UserController(IUserService userService,
+            IUserManager userManager,
+            IRoleService roleService,
+            ISectorService sectorService)
         {
             this.userService = userService;
             this.userManager = userManager;
+            this.roleService = roleService;
+            this.sectorService = sectorService;
         }
         [HttpGet]
         public IActionResult Login()
@@ -43,7 +52,7 @@ namespace Emit.Web.Controllers
         public async Task<IActionResult> Logout()
         {
             await userManager.LogOut();
-            return NoContent();
+            return RedirectToAction("Login");
         }
         [HttpGet]
         public IActionResult Register()
@@ -85,8 +94,43 @@ namespace Emit.Web.Controllers
             {
                 users = userService.GetUsersBySector(User.GetSector());
             }
-         
+            users = users.Where(x => x.Id != User.GetId<long>());
             return View(users);
+        }
+        [HttpGet("user/{id}/edit")]
+        public IActionResult Edit(long id)
+        {
+            var userRoles = roleService.GetUserRoles(id).ToList();
+            var model = new EditViewModel
+            {
+                UserRoles = userRoles,
+                Roles = roleService.GetRoles().Where(x => !userRoles.Contains(x)).ToList(),
+                Id=id,
+                Sectors = sectorService.GetSectorNames().ToList()
+            };
+            return View(model);
+        }
+        [HttpGet("user/details")]
+        public IActionResult Details()
+        {
+            return View(userService.GetUser(User.GetId<long>()));
+        }
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword([FromForm]ChangePassword changePassword)
+        {
+            var changePasswrod = new ChangePasswordDto
+            {
+                Email = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name)?.Value,
+                OldPassword =changePassword.OldPassword,
+                Password =changePassword.NewPassword
+            };
+            userService.ChangePassword(changePasswrod);
+            await userManager.LogOut();
+            return RedirectToAction("Login");
         }
     }
 }

@@ -37,6 +37,10 @@ namespace Eimt.Application.Services
                                     .Roles
                                     .Select(x => new Claim(ClaimTypes.Role, x.Role.Name))
                                     .ToList();
+            if(claims.Any(x=>x.Type == ClaimTypes.Role && x.Value == "Menager"))
+            {
+                claims.Add(new Claim("Sector", user.ManagesSector.Name));
+            }
             claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
             claims.Add(new Claim(ClaimTypes.Name, user.Email));
             

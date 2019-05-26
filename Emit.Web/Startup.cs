@@ -47,9 +47,11 @@ namespace Emit.Web
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IUserManager, UserManager>();
             services.AddScoped<IMessageSender, EmailSender>();
+            services.AddScoped<IUserMessageSender, UserEmailSender>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<ISectorService, SectorService>();
             services.AddHttpContextAccessor();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                .AddCookie();

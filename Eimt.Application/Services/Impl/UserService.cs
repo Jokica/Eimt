@@ -18,10 +18,10 @@ namespace Eimt.Application.Services.Impl
     {
         private readonly IUserRepository repository;
         private readonly IUnitOfWork unitOfWork;
-        private readonly IMessageSender messageSender;
+        private readonly IUserMessageSender messageSender;
         private readonly IRoleService roleService;
 
-        public UserService(IUnitOfWork unitOfWork,IMessageSender messageSender,IRoleService roleService)
+        public UserService(IUnitOfWork unitOfWork,IUserMessageSender messageSender,IRoleService roleService)
         {
             repository = unitOfWork.UserRepository;
             this.unitOfWork = unitOfWork;
@@ -35,6 +35,7 @@ namespace Eimt.Application.Services.Impl
                return new ForgotPasswordResult { Message = "Email Doesn't Exist" ,Success = false};
             var generatedPassword = user.ResetPassword();
             await messageSender.SendResetPasswordEmail(email, generatedPassword);
+            unitOfWork.Commit();
             return new ForgotPasswordResult {
                 Message = "Your password was send to you.Check your Email",
                 Success = true
@@ -42,14 +43,10 @@ namespace Eimt.Application.Services.Impl
         }
         public async Task RegisterNewUser(RegisterUserDto userDto)
         {
-            using (var transaction = unitOfWork.CreateTransaction())
-            {
-                var user = new User(userDto.Email, userDto.Password);
-                repository.Add(user);
-                unitOfWork.Commit();
-                await messageSender.SendConfirmationToken(userDto.Email, user.Token.SecurityStamp);
-                transaction.Commit();
-            }
+            var user = new User(userDto.Email, userDto.Password);
+            repository.Add(user);
+            unitOfWork.Commit();
+            await messageSender.SendConfirmationToken(userDto.Email, user.Token.SecurityStamp);
         }
         public ChangePasswordResult ChangePassword(ChangePasswordDto changePasswordDto)
         {
@@ -87,6 +84,11 @@ namespace Eimt.Application.Services.Impl
             return res;
         }
 
+        public UserDto GetUser(long id)
+        {
+            return repository.FindFull(id).ToDto();
+        }
+
         public IEnumerable<UserDto> GetUsers()
         {
             return repository
@@ -99,6 +101,13 @@ namespace Eimt.Application.Services.Impl
             return repository
                    .FindSectorUsersWithRoles(sector)
                    .Select(x => x.ToDto());
+        }
+
+        public void DeleteUser(long id)
+        {
+            var user = repository.Find(id);
+            repository.Remove(user);
+            unitOfWork.Commit();
         }
     }
 }

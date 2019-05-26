@@ -12,11 +12,13 @@ namespace Eimt.DAL.Repository
     {
         private readonly DbContext context;
         private readonly DbSet<TEntity> entities;
+        private List<Expression<Func<TEntity, object>>> includes;
 
         public BaseRepository(DbContext context)
         {
             this.context = context ?? throw new ArgumentNullException(nameof(context));
             entities = context.Set<TEntity>();
+            includes = new List<Expression<Func<TEntity, object>>>();
         }
         public void Add(TEntity user)
         {
@@ -27,7 +29,11 @@ namespace Eimt.DAL.Repository
         {
             return entities.Find(Id);
         }
-
+        public IRepository<TEntity,TKey> Include(Expression<Func<TEntity, object>> include)
+        {
+            includes.Add(include);
+            return this;
+        }
         public TEntity Find(TKey Id, params Expression<Func<TEntity, object>>[] includes)
         {
             foreach(var include in includes)
@@ -39,6 +45,11 @@ namespace Eimt.DAL.Repository
         public TEntity FirstOrDefualt(Expression<Func<TEntity, bool>> Predicate)
         {
             return entities.FirstOrDefault(Predicate);
+        }
+
+        public IEnumerable<TEntity> GetAll()
+        {
+            return entities;
         }
 
         public void Remove(TEntity entity)

@@ -19,10 +19,20 @@ namespace Eimt.DAL.Repository
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
+        public User FindFull(long Id)
+        {
+            return context.Users
+                 .Include(x => x.Roles)
+                 .ThenInclude(x => x.Role)
+                 .Include(x => x.Sector)
+                 .FirstOrDefault(x => x.Id == Id);
+        }
+
         public IEnumerable<User> FindSectorUsersWithRoles(string sector)
         {
             return context.Users
                  .Include(x => x.Roles)
+                 .ThenInclude(x=>x.Role)
                  .Include(x=>x.Sector)
                  .Where(x=>x.Sector.Name == sector);
         }
@@ -44,12 +54,24 @@ namespace Eimt.DAL.Repository
             return context.Users
                     .Include(x => x.Roles)
                     .ThenInclude(x=>x.Role)
+                    .Include(x=>x.ManagesSector)
                     .FirstOrDefault(x => x.Email == email);
         }
+
+        public User FindWithRoles(long id)
+        {
+            return context.Users
+                    .Include(x => x.Roles)
+                    .ThenInclude(x => x.Role)
+                    .FirstOrDefault(x=>x.Id ==id);
+        }
+
         IEnumerable<User> IUserRepository.FindAllUsersWithRoles()
         {
           return context.Users
-                    .Include(x => x.Roles);
+                    .Include(x => x.Roles)
+                    .ThenInclude(x=>x.Role)
+                    .Include(x=>x.Sector);
         }
     }
 }

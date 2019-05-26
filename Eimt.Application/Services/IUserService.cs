@@ -14,9 +14,10 @@ namespace Eimt.Application.Services
         IEnumerable<UserDto> GetUsers();
         Task RegisterNewUser(RegisterUserDto userDto);
         bool ConfirmUserToken(string email, string token);
-
+        UserDto GetUser(long id);
         Task<ForgotPasswordResult> ForgotPassword(string Email);
         ChangePasswordResult ChangePassword(ChangePasswordDto changePasswordDto);
         IEnumerable<UserDto> GetUsersBySector(string sector);
+        void DeleteUser(long id);
     }
 }

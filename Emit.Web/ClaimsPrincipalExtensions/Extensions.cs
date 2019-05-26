@@ -20,6 +20,11 @@ namespace Emit.Web.ClaimsPrincipalExtensions
         {
             return claimsPrincipal.Claims.FirstOrDefault(x => x.Type == "Sector")?.Value;
         }
-        
+        public static Tkey GetId<Tkey>(this ClaimsPrincipal claimsPrincipal) where Tkey : IComparable
+        {
+            var id = claimsPrincipal.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value ?? throw new ArgumentNullException("key");
+            return (Tkey)Convert.ChangeType(id, typeof(Tkey));
+        }
+
     }
 }

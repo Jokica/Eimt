@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Eimt.Application.Interfaces;
 using Eimt.Domain.DomainModels;
@@ -33,6 +34,19 @@ namespace Eimt.Application.Services.Impl
             role.Users.Add(new UserRoles(role,user));
             if (saveChanges)
                 unitOfWork.Commit();
+        }
+
+        public IEnumerable<string> GetUserRoles(long id)
+        {
+          return  unitOfWork.UserRepository
+                .FindWithRoles(id)
+                .Roles
+                .Select(x => x.Role.Name);
+        }
+
+        public IEnumerable<string> GetRoles()
+        {
+            return unitOfWork.RoleRepository.GetAll().Select(x => x.Name);
         }
     }
 }

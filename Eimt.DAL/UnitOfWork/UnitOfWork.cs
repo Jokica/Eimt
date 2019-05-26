@@ -1,3 +1,4 @@
+using Eimt.Application.DAL;
 using Eimt.Application.Interfaces;
 using Eimt.DAL.Repository;
 using Eimt.Persistence;
@@ -15,11 +16,14 @@ namespace Eimt.DAL.UnitOfWork
 
         public IRoleRepository RoleRepository { get; private set; }
 
+        public ISectorRepository SectorRepository { get; private set; }
+
         public UnitOfWork(EiMTDbContext context)
         {
             this._context = context ?? throw new ArgumentNullException(nameof(context));
             UserRepository = new UserRepository(context);
             RoleRepository = new RoleRepository(context);
+            SectorRepository = new SectorRepository(context);
         }
         public int Commit()
         {

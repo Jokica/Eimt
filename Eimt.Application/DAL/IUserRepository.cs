@@ -10,8 +10,9 @@ namespace Eimt.Application.Interfaces
         User FindUserByEmail(string email);
         User FindUserByEmailincludeToken(string email);
         User FindUserByEmailWithRoles(string email);
+        User FindFull(long Id);
         IEnumerable<User> FindAllUsersWithRoles();
         IEnumerable<User> FindSectorUsersWithRoles(string sector);
-
+        User FindWithRoles(long id);
     }
 }
