@@ -1,5 +1,7 @@
 using Eimt.Application.Interfaces;
 using Eimt.Domain.DomainModels;
+using Eimt.Persistence;
+using Microsoft.EntityFrameworkCore;
 using Quartz;
 using System;
 using System.Linq;
@@ -9,28 +11,30 @@ namespace Eimt.Application.Jobs
 {
     public class DeleteOldConfirmationTokensJob : IJob
     {
-        private readonly IUnitOfWork unitOfWork;
+        private readonly EiMTDbContext dbContext;
 
-        public DeleteOldConfirmationTokensJob(IUnitOfWork unitOfWork)
+        public DeleteOldConfirmationTokensJob(DbContextOptions<EiMTDbContext> options)
         {
-            this.unitOfWork = unitOfWork;
+            this.dbContext =new EiMTDbContext(options);
         }
         public Task Execute(IJobExecutionContext context)
         {
-            var repository = unitOfWork.CreateRepository<UserConfirmationToken, long>();
-            var tokens = repository
-                            .Where(x => x.CreateAt.AddMinutes(1) >= DateTime.Now);
-            if (tokens.Any())
+            DbFunctions dfunc = null;
+            var users = dbContext.Users
+                            .Include(x=>x.Token)
+                            .Where(x => SqlServerDbFunctionsExtensions.DateDiffDay(dfunc,x.Token.CreateAt, DateTime.Now) > 1)
+                            .ToList();
+            if (users.Any())
             {
-                var transation = unitOfWork.CreateTransaction();
+                var transation = dbContext.Database.BeginTransaction();
                 try
                 {
 
-                    foreach (var token in tokens)
+                    foreach (var token in users)
                     {
-                        repository.Remove(token);
+                        dbContext.Users.Remove(token);
                     }
-                    unitOfWork.Commit();
+                    dbContext.SaveChanges();
                     transation.Commit();
                 }
                 catch
@@ -40,6 +44,7 @@ namespace Eimt.Application.Jobs
                 finally
                 {
                     transation.Dispose();
+                    dbContext.Dispose();
                 }
             }
             return Task.FromResult(0);

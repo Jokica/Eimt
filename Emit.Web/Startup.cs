@@ -51,6 +51,10 @@ namespace Emit.Web
             services.AddScoped<ISectorService, SectorService>();
             services.AddScoped<IDocumentService, ExelService>();
             services.AddHttpContextAccessor();
+
+            var optionsBuilder = new DbContextOptionsBuilder<EiMTDbContext>();
+            optionsBuilder.UseSqlServer(Configuration.GetConnectionString("EiMTConnectionString"));
+            services.AddSingleton(optionsBuilder.Options);
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                .AddCookie(options =>
                {

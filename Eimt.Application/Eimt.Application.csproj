@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Eimt.Domain\Eimt.Domain.csproj" />
+    <ProjectReference Include="..\Eimt.Persistence\Eimt.Persistence.csproj" />
   </ItemGroup>
 
   <ItemGroup>
