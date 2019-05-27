@@ -21,6 +21,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Emit.Web.Scedular;
+using Eimt.Application.Jobs;
 
 namespace Emit.Web
 {
@@ -64,7 +65,7 @@ namespace Emit.Web
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.Configure<EmailSenderConfiguration>(Configuration.GetSection("EmailSender"));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddSingleton(s => Shedular.ConfigureJobsAsync().GetAwaiter().GetResult());
+            services.AddQuartz(typeof(DeleteOldConfirmationTokensJob));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -89,7 +90,7 @@ namespace Emit.Web
                 routes.MapHub<ChatHub>("/chathub");
             });
 
-
+            app.UseQuartz();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

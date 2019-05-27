@@ -1,6 +1,9 @@
 using Eimt.Application.Jobs;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 using Quartz;
 using Quartz.Impl;
+using Quartz.Spi;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -9,41 +12,49 @@ using System.Threading.Tasks;
 
 namespace Emit.Web.Scedular
 {
-    public class Shedular
+    public static class Shedular
     {
-        public static async Task<IScheduler> ConfigureJobsAsync()
+        public static void AddQuartz(this IServiceCollection services, Type jobType)
         {
-            try
+            services.Add(new ServiceDescriptor(typeof(IJob), jobType, ServiceLifetime.Transient));
+            services.AddSingleton<IJobFactory, ScheduledJobFactory>();
+            services.AddSingleton(provider =>
             {
-                var properties = new NameValueCollection
-                {
-                    ["quartz.scheduler.instanceName"] = "QuartzWithCore",
-                    ["quartz.threadPool.type"] = "Quartz.Simpl.SimpleThreadPool, Quartz",
-                    ["quartz.threadPool.threadCount"] = "3",
-                    ["quartz.jobStore.type"] = "Quartz.Simpl.RAMJobStore, Quartz",
-                };
-                StdSchedulerFactory factory = new StdSchedulerFactory(properties);
-                IScheduler scheduler = await factory.GetScheduler();
-                await scheduler.Start();
-                IJobDetail job = JobBuilder.Create<DeleteOldConfirmationTokensJob>()
-                                 .WithIdentity("DeleteTokenJob", "group1")
-                                 .Build();
-                ITrigger trigger = TriggerBuilder.Create()
-                                    .WithIdentity("triger1", "group1")
-                                    .StartAt(DateTime.Now.AddSeconds(10))
-                                    .WithSimpleSchedule(x =>
-                                            x.WithIntervalInSeconds(10)
-                                            .RepeatForever())
-                                    .Build();
-                await scheduler.ScheduleJob(job, trigger);
-                return scheduler;
+                return JobBuilder.Create<DeleteOldConfirmationTokensJob>()
+                  .WithIdentity("Sample.job", "group1")
+                  .Build();
+            });
 
-            }
-            catch (SchedulerException se)
+            services.AddSingleton(provider =>
             {
-                await Console.Error.WriteLineAsync(se.ToString());
-                throw;
-            }
+                return TriggerBuilder.Create()
+                .WithIdentity($"Sample.trigger", "group1")
+                .StartNow()
+                .WithSimpleSchedule
+                 (s =>
+                    s.WithInterval(TimeSpan.FromSeconds(5))
+                    .RepeatForever()
+                 )
+                 .Build();
+            });
+
+            services.AddSingleton(provider =>
+            {
+                var schedulerFactory = new StdSchedulerFactory();
+                var scheduler = schedulerFactory.GetScheduler().Result;
+                scheduler.JobFactory = provider.GetService<IJobFactory>();
+                scheduler.Start();
+                return scheduler;
+            });
+
+        }
+
+        public static void UseQuartz(this IApplicationBuilder app)
+        {
+            app.ApplicationServices.GetService<IScheduler>()
+                .ScheduleJob(app.ApplicationServices.GetService<IJobDetail>(),
+                app.ApplicationServices.GetService<ITrigger>()
+                );
         }
     }
 }
