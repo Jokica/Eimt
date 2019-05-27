@@ -29,6 +29,14 @@
         </div>
     </div>
 </section>
+<div class="dropdown p-2 float-lg-right">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Export
+    </button>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item" asp-action="csv" asp-controller="user">Exel</a>
+    </div>
+</div>
 <table id="empoyees" class="table table-hover  table-striped table-secondary">
     <thead class="bg-info">
         <tr>

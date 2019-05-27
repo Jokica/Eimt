@@ -22,7 +22,6 @@ namespace Emit.Web
         public static void Main(string[] args)
         {
            var host = CreateWebHostBuilder(args).Build();
-            ConfigureJobsAsync().GetAwaiter().GetResult();
             using (var scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
@@ -112,37 +111,6 @@ namespace Emit.Web
 
             }
         }
-
-        private static async Task ConfigureJobsAsync()
-        {
-            try
-            {
-                NameValueCollection props = new NameValueCollection
-                {
-                    { "quartz.serializer.type", "binary" }
-                };
-                StdSchedulerFactory factory = new StdSchedulerFactory(props);
-                IScheduler scheduler = await factory.GetScheduler();
-                await scheduler.Start();
-                IJobDetail job = JobBuilder.Create<DeleteOldConfirmationTokensJob>()
-                                 .WithIdentity("DeleteTokenJob", "group1")
-                                 .Build();
-                ITrigger trigger = TriggerBuilder.Create()
-                                    .WithIdentity("triger1", "group1")
-                                    .StartNow()
-                                    .WithSimpleSchedule(x => 
-                                            x.WithIntervalInSeconds(10)
-                                            .RepeatForever())
-                                    .Build();
-                await scheduler.ScheduleJob(job,trigger);
-
-            }
-            catch (SchedulerException se)
-            {
-                await Console.Error.WriteLineAsync(se.ToString());
-            }
-        }
-
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>();

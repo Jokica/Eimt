@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Emit.Web.Scedular;
 
 namespace Emit.Web
 {
@@ -52,13 +53,18 @@ namespace Emit.Web
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ISectorService, SectorService>();
+            services.AddScoped<IDocumentService, ExelService>();
             services.AddHttpContextAccessor();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-               .AddCookie();
+               .AddCookie(options =>
+               {
+                   options.LoginPath = "/user/login";
+               });
             services.AddSignalR();
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.Configure<EmailSenderConfiguration>(Configuration.GetSection("EmailSender"));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddSingleton(s => Shedular.ConfigureJobsAsync().GetAwaiter().GetResult());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -88,7 +94,7 @@ namespace Emit.Web
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=User}/{action=Index}/{id?}");
             });
         }
     }

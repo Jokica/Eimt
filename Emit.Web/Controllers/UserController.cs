@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Collections;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using Eimt.Application.Interfaces;
 using Eimt.Application.Interfaces.Dtos;
@@ -21,16 +24,19 @@ namespace Emit.Web.Controllers
         private readonly IUserManager userManager;
         private readonly IRoleService roleService;
         private readonly ISectorService sectorService;
+        private readonly IDocumentService documentService;
 
         public UserController(IUserService userService,
             IUserManager userManager,
             IRoleService roleService,
-            ISectorService sectorService)
+            ISectorService sectorService,
+            IDocumentService documentService)
         {
             this.userService = userService;
             this.userManager = userManager;
             this.roleService = roleService;
             this.sectorService = sectorService;
+            this.documentService = documentService;
         }
         [HttpGet]
         public IActionResult Login()
@@ -45,7 +51,7 @@ namespace Emit.Web.Controllers
                 loginViewModel.Password, 
                 loginViewModel.RememberMe);
             if (result.Success)
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index");
 
             return View();
         }
@@ -85,17 +91,7 @@ namespace Emit.Web.Controllers
         [Authorize]
         public IActionResult Index()
         {
-            IEnumerable<UserDto> users = new List<UserDto>();
-            if (User.IsAdmin())
-            {
-                users = userService.GetUsers();
-            }
-            else if (User.IsMenager())
-            {
-                users = userService.GetUsersBySector(User.GetSector());
-            }
-            users = users.Where(x => x.Id != User.GetId<long>());
-            return View(users);
+            return View(GetUsersBasedOnRole());
         }
         [HttpGet("user/{id}/edit")]
         public IActionResult Edit(long id)
@@ -131,6 +127,29 @@ namespace Emit.Web.Controllers
             userService.ChangePassword(changePasswrod);
             await userManager.LogOut();
             return RedirectToAction("Login");
+        }
+        [HttpGet]
+        public IActionResult CSV()
+        {
+            var users = GetUsersBasedOnRole();
+            var exel = documentService.ToDocument(users.ToList());
+            return new FileContentResult(exel, "text/csv")
+            {
+                FileDownloadName = "User.xlsx"
+            };
+        }
+        private IEnumerable<UserDto> GetUsersBasedOnRole()
+        {
+            IEnumerable<UserDto> users = new List<UserDto>();
+            if (User.IsAdmin())
+            {
+                users = userService.GetUsers();
+            }
+            else if (User.IsMenager())
+            {
+                users = userService.GetUsersBySector(User.GetSector());
+            }
+           return users = users.Where(x => x.Id != User.GetId<long>());
         }
     }
 }
