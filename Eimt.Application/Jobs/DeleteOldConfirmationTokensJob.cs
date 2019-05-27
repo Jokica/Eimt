@@ -30,9 +30,10 @@ namespace Eimt.Application.Jobs
                 try
                 {
 
-                    foreach (var token in users)
+                    foreach (var user in users)
                     {
-                        dbContext.Users.Remove(token);
+                        if(!user.IsEmailConfirmed)
+                            dbContext.Users.Remove(user);
                     }
                     dbContext.SaveChanges();
                     transation.Commit();
