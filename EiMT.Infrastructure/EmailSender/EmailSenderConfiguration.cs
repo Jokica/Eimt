@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace EiMT.Infrastructure.EmailSender
+﻿namespace EiMT.Infrastructure.EmailSender
 {
     public class EmailSenderConfiguration
     {

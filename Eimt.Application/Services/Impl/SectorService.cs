@@ -1,7 +1,5 @@
 ﻿using Eimt.Application.Interfaces;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Eimt.Application.Services.Impl
 {

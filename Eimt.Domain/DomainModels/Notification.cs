@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Eimt.Domain.DomainModels
 {
@@ -16,7 +14,7 @@ namespace Eimt.Domain.DomainModels
         {
 
         }
-        public Notification(string message,User user,string from)
+        public Notification(string message, User user, string from)
         {
             Message = message;
             User = user;

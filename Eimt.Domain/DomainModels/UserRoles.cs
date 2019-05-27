@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Eimt.Domain.DomainModels
+﻿namespace Eimt.Domain.DomainModels
 {
     public class UserRoles
     {
@@ -20,11 +16,11 @@ namespace Eimt.Domain.DomainModels
             Role = role;
             User = user;
         }
-        public UserRoles(long RoleId,long UserId)
+        public UserRoles(long RoleId, long UserId)
         {
             this.UserId = UserId;
             this.RoleId = RoleId;
         }
-      
+
     }
 }

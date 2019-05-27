@@ -1,9 +1,7 @@
-using System;
-using System.Collections.Generic;
 using System.Collections;
 using System.IO;
-using System.Text;
 using System.Reflection;
+using System.Text;
 
 namespace Eimt.Application.Services.Impl
 {
@@ -39,7 +37,7 @@ namespace Eimt.Application.Services.Impl
             }
             sw.Write(", ");
         }
-        private void WriteProps(StringWriter sw,object obj, PropertyInfo[] propertyInfos)
+        private void WriteProps(StringWriter sw, object obj, PropertyInfo[] propertyInfos)
         {
             foreach (var prop in propertyInfos)
             {
@@ -58,13 +56,13 @@ namespace Eimt.Application.Services.Impl
         }
         private void SetHeader(StringWriter sw, object obj)
         {
-                var props = obj.GetType().GetProperties();
-                foreach(var prop in props)
-                {
-                    sw.Write(prop.Name);
-                    sw.Write(", ");
-                }
-                sw.WriteLine();
+            var props = obj.GetType().GetProperties();
+            foreach (var prop in props)
+            {
+                sw.Write(prop.Name);
+                sw.Write(", ");
+            }
+            sw.WriteLine();
         }
     }
 }

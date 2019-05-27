@@ -8,11 +8,11 @@ namespace Eimt.Domain.DomainModels
 {
     public class User
     {
-        public long Id { get;  set; }
+        public long Id { get; set; }
         public bool IsEmailConfirmed { get; set; }
         public int AccessCount { get; private set; }
         public UserConfirmationToken Token { get; set; }
-        public string Email { get;  set; }
+        public string Email { get; set; }
         public List<UserRoles> Roles { get; set; }
         public string Password { get; private set; }
         public Sector Sector { get; set; }
@@ -52,11 +52,11 @@ namespace Eimt.Domain.DomainModels
             byte[] data = Encoding.UTF8.GetBytes(password);
             using (var sHA = SHA256.Create())
             {
-                data = sHA.ComputeHash(data,0,data.Length);
+                data = sHA.ComputeHash(data, 0, data.Length);
                 return Password == BitConverter.ToString(data).Replace("-", "");
             }
         }
-        public ChangePasswordResult ChangePassword(string oldPasword,string newPassword)
+        public ChangePasswordResult ChangePassword(string oldPasword, string newPassword)
         {
             if (!DoesPasswordMatch(oldPasword))
                 return new ChangePasswordResult { Message = "Old password doesn't match current password" };
@@ -66,7 +66,7 @@ namespace Eimt.Domain.DomainModels
 
         public bool ConfirmUser(string token)
         {
-            if(Token != null && token == Token.SecurityStamp)
+            if (Token != null && token == Token.SecurityStamp)
             {
                 IsEmailConfirmed = true;
                 this.Token = null;

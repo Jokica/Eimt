@@ -2,9 +2,7 @@ using Eimt.Application.Interfaces;
 using Eimt.Domain.DomainModels;
 using Quartz;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Eimt.Application.Jobs
@@ -35,7 +33,7 @@ namespace Eimt.Application.Jobs
                     unitOfWork.Commit();
                     transation.Commit();
                 }
-                catch 
+                catch
                 {
                     transation.Rollback();
                 }

@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Eimt.Application.Interfaces;
+using Eimt.Application.Jobs;
 using Eimt.Application.Services;
 using Eimt.Application.Services.Impl;
 using Eimt.DAL.Repository;
@@ -10,18 +7,16 @@ using Eimt.DAL.UnitOfWork;
 using Eimt.Persistence;
 using EiMT.Infrastructure.EmailSender;
 using Emit.Web.Hubs;
+using Emit.Web.Scedular;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Emit.Web.Scedular;
-using Eimt.Application.Jobs;
 
 namespace Emit.Web
 {

@@ -1,11 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Collections;
-using System.IO;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 using Eimt.Application.Interfaces;
 using Eimt.Application.Interfaces.Dtos;
 using Eimt.Application.Services;
@@ -15,6 +7,10 @@ using Emit.Web.ClaimsPrincipalExtensions;
 using Emit.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Emit.Web.Controllers
 {
@@ -47,8 +43,8 @@ namespace Emit.Web.Controllers
         public async Task<IActionResult> Login([FromForm]LoginViewModel loginViewModel)
         {
             var result = await userManager.Login(
-                loginViewModel.Email, 
-                loginViewModel.Password, 
+                loginViewModel.Email,
+                loginViewModel.Password,
                 loginViewModel.RememberMe);
             if (result.Success)
                 return RedirectToAction("Index");
@@ -76,10 +72,10 @@ namespace Emit.Web.Controllers
             return View();
         }
         [HttpGet]
-        public IActionResult ConfirmEmail(string email,string token)
+        public IActionResult ConfirmEmail(string email, string token)
         {
             var succes = userService.ConfirmUserToken(email, token);
-            if(succes)
+            if (succes)
                 return RedirectToAction("Login");
             return View();
         }
@@ -101,7 +97,7 @@ namespace Emit.Web.Controllers
             {
                 UserRoles = userRoles,
                 Roles = roleService.GetRoles().Where(x => !userRoles.Contains(x)).ToList(),
-                Id=id,
+                Id = id,
                 Sectors = sectorService.GetSectorNames().ToList()
             };
             return View(model);
@@ -121,8 +117,8 @@ namespace Emit.Web.Controllers
             var changePasswrod = new ChangePasswordDto
             {
                 Email = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name)?.Value,
-                OldPassword =changePassword.OldPassword,
-                Password =changePassword.NewPassword
+                OldPassword = changePassword.OldPassword,
+                Password = changePassword.NewPassword
             };
             userService.ChangePassword(changePasswrod);
             await userManager.LogOut();
@@ -149,7 +145,7 @@ namespace Emit.Web.Controllers
             {
                 users = userService.GetUsersBySector(User.GetSector());
             }
-           return users = users.Where(x => x.Id != User.GetId<long>());
+            return users = users.Where(x => x.Id != User.GetId<long>());
         }
     }
 }

@@ -4,12 +4,9 @@ using Eimt.Application.Interfaces.Dtos;
 using Eimt.Application.Services.Dtos;
 using Eimt.Application.Services.ResultModels;
 using Eimt.Application.Services.ViewModels;
-using Eimt.Domain;
 using Eimt.Domain.DomainModels;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Eimt.Application.Services.Impl
@@ -21,7 +18,7 @@ namespace Eimt.Application.Services.Impl
         private readonly IUserMessageSender messageSender;
         private readonly IRoleService roleService;
 
-        public UserService(IUnitOfWork unitOfWork,IUserMessageSender messageSender,IRoleService roleService)
+        public UserService(IUnitOfWork unitOfWork, IUserMessageSender messageSender, IRoleService roleService)
         {
             repository = unitOfWork.UserRepository;
             this.unitOfWork = unitOfWork;
@@ -32,11 +29,12 @@ namespace Eimt.Application.Services.Impl
         {
             User user = repository.FindUserByEmail(email);
             if (user == null)
-               return new ForgotPasswordResult { Message = "Email Doesn't Exist" ,Success = false};
+                return new ForgotPasswordResult { Message = "Email Doesn't Exist", Success = false };
             var generatedPassword = user.ResetPassword();
             await messageSender.SendResetPasswordEmail(email, generatedPassword);
             unitOfWork.Commit();
-            return new ForgotPasswordResult {
+            return new ForgotPasswordResult
+            {
                 Message = "Your password was send to you.Check your Email",
                 Success = true
             };
@@ -53,23 +51,23 @@ namespace Eimt.Application.Services.Impl
             var user = repository.FindUserByEmail(changePasswordDto.Email);
             if (user == null)
             {
-                return new ChangePasswordResult {Message = "User Doesn't exists" };
+                return new ChangePasswordResult { Message = "User Doesn't exists" };
             }
             if (!user.IsEmailConfirmed)
             {
                 return new ChangePasswordResult { Message = "User account is not confirmed" };
             }
-            var result = user.ChangePassword(changePasswordDto.OldPassword,changePasswordDto.Password);
+            var result = user.ChangePassword(changePasswordDto.OldPassword, changePasswordDto.Password);
             if (result.Success)
             {
                 unitOfWork.Commit();
             }
             return new ChangePasswordResult(result);
         }
-        public bool ConfirmUserToken(string email,string token)
+        public bool ConfirmUserToken(string email, string token)
         {
             var user = repository.FindUserByEmailincludeToken(email);
-            if(user == null)
+            if (user == null)
             {
                 return false;
             }
@@ -93,7 +91,7 @@ namespace Eimt.Application.Services.Impl
         {
             return repository
                 .FindAllUsersWithRoles()
-                .Select(x=>x.ToDto());
+                .Select(x => x.ToDto());
         }
 
         public IEnumerable<UserDto> GetUsersBySector(string sector)

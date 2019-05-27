@@ -4,10 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace EiMT.Infrastructure.EmailSender
@@ -18,10 +15,10 @@ namespace EiMT.Infrastructure.EmailSender
         private readonly EmailSenderConfiguration Configuration;
         private readonly HttpContext context;
         public UserEmailSender(
-            IUrlHelperFactory factory, 
-            IActionContextAccessor actionContextAccessor, 
-            IHttpContextAccessor contextAccessor, 
-            IOptions<EmailSenderConfiguration> options):base(options) 
+            IUrlHelperFactory factory,
+            IActionContextAccessor actionContextAccessor,
+            IHttpContextAccessor contextAccessor,
+            IOptions<EmailSenderConfiguration> options) : base(options)
         {
             Url = factory.GetUrlHelper(actionContextAccessor.ActionContext);
             Configuration = options.Value;
@@ -30,7 +27,6 @@ namespace EiMT.Infrastructure.EmailSender
         public Task SendConfirmationToken(string email, string securityStamp)
         {
             var name = email.Split('.').FirstOrDefault();
-
             string url = CreateConfirmationTokenUrl(email, securityStamp);
             string body = CreateConfirmationTokenBody(email, url);
             return SendMail(Configuration.DisplayName,

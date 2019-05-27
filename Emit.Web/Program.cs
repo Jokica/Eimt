@@ -1,19 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Eimt.Application.Jobs;
 using Eimt.Domain.DomainModels;
 using Eimt.Persistence;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Quartz;
-using Quartz.Impl;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Emit.Web
 {
@@ -21,7 +12,7 @@ namespace Emit.Web
     {
         public static void Main(string[] args)
         {
-           var host = CreateWebHostBuilder(args).Build();
+            var host = CreateWebHostBuilder(args).Build();
             using (var scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
@@ -102,10 +93,10 @@ namespace Emit.Web
                 context.Users.AddRange(regular);
                 context.SaveChanges();
                 menId = 0;
-                foreach(var sec in ssectors)
+                foreach (var sec in ssectors)
                 {
                     sec.Employees.Add(menagers[menId]);
-                        menId++;
+                    menId++;
                 }
                 context.SaveChanges();
 

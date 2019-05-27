@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Eimt.Domain.DomainModels
 {
@@ -18,8 +17,8 @@ namespace Eimt.Domain.DomainModels
         public Sector(string Name, User Menager, List<User> Employees)
         {
             this.Name = Name;
-            this.Menager = Menager ?? throw new ArgumentNullException(nameof(Menager)); 
-            this.Employees = Employees ?? throw new  ArgumentNullException(nameof(Employees));
+            this.Menager = Menager ?? throw new ArgumentNullException(nameof(Menager));
+            this.Employees = Employees ?? throw new ArgumentNullException(nameof(Employees));
         }
         public Sector(string Name, long MenagerId, List<User> Employees)
         {

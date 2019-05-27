@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Eimt.Domain.DomainModels
 {
@@ -11,8 +9,8 @@ namespace Eimt.Domain.DomainModels
         public long UserId { get; set; }
         public string SecurityStamp { get; set; }
         public DateTime CreateAt { get; set; }
-   
-        public UserConfirmationToken(User user,string stamp)
+
+        public UserConfirmationToken(User user, string stamp)
         {
             User = user;
             SecurityStamp = stamp;
