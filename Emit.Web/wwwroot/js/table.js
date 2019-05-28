@@ -1,5 +1,5 @@
-﻿var userdata = [];
-
+var userdata = [];
+var userId = 0;
 const table = $('#empoyees').dataTable({
     "processing": true,
     "pageLength": 20,
@@ -59,13 +59,14 @@ function addEventListeners() {
         $(this).closest("tr").fadeOut();
     });
     $("#empoyees").on('click', '.edit', function (e) {
-        var id = $(this).attr('data-id')
+      var id = $(this).attr('data-id')
+      userId = id;
         $('#exampleModalCenter').modal("show");
         fetch('user/' + id + "/edit")
             .then(x => x.text())
             .then(function (html) {
-                console.log(html)
-                $("#edit-user-body").html(html);
+              $("#edit-user-body").html(html);
+              addSaveChanges()
             })
     });
     $("#empoyees").on('mouseenter', '.info', function (e) {
@@ -81,3 +82,39 @@ function addEventListeners() {
         });
     });
 };
+function addSaveChanges() {
+  $("#save-changes").on('click', function () {
+    var currentRoles = $("#current-roles")
+    var sector = $("#sector-select")
+    if (currentRoles.length) {
+      var cRoles =[]
+      currentRoles.children().map(x => {
+       cRoles.push(currentRoles.children()[x].innerText);
+      });
+       cRoles = cRoles
+         .filter(x => !userdata.find(x => x.id == userId).roles.includes(x))
+      if (cRoles.includes("Menager") && !sector.val()) {
+        $("#error").text("Select a sector for the manager")
+      }
+      else {
+        fetch("/identity/" + userId + '/updateinfo', {
+          method: "post",
+          body: {
+            sector: sector.val(),
+            roles
+          }
+        })
+      }
+    }
+    else {
+      console.log(sector.val())
+      fetch("/identity/" + userId + '/addtosector', {
+        method: "post",
+        body: sector.val();
+      });
+    }
+    $('#exampleModalCenter').modal("hide");
+  });
+}
+
+

@@ -1,4 +1,4 @@
-﻿@model Emit.Web.Models.EditViewModel
+@model Emit.Web.Models.EditViewModel
 @using Emit.Web.ClaimsPrincipalExtensions;
 @{
     Layout = null;
@@ -8,6 +8,7 @@
 
     <div class="form-group">
         <label for="exampleFormControlSelect1">Change a sector</label>
+        <div class="alert-danger" id="error">  </div>
         <select class="form-control" id="sector-select">
             <option selected="selected" id="sector-select" disabled="disabled">Pick a sector</option>
             @foreach (var sector in Model.Sectors)

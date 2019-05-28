@@ -33,6 +33,7 @@
     <ProjectReference Include="..\Eimt.DAL\Eimt.DAL.csproj" />
     <ProjectReference Include="..\EiMT.Infrastructure\EiMT.Infrastructure.csproj" />
     <ProjectReference Include="..\Eimt.Persistence\Eimt.Persistence.csproj" />
+    <PackageReference Include="AspNet.Security.OAuth.GitHub" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />

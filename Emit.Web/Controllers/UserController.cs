@@ -5,6 +5,7 @@ using Eimt.Application.Services.Dtos;
 using Eimt.Application.Services.ViewModels;
 using Emit.Web.ClaimsPrincipalExtensions;
 using Emit.Web.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -34,11 +35,24 @@ namespace Emit.Web.Controllers
             this.sectorService = sectorService;
             this.documentService = documentService;
         }
+        [Route("signin/{provider}")]
+        public IActionResult SignIn(string provider, string returnUrl = null) =>
+        Challenge(new AuthenticationProperties { RedirectUri = returnUrl ?? "/" }, provider);
+
         [HttpGet]
-        public IActionResult Login()
-        {
-            return View();
-        }
+        public IActionResult Login()=> View();
+        [HttpGet]
+        public IActionResult Register() => View();
+        [HttpGet]
+        public IActionResult ForgotPassword() => View();
+        [Authorize]
+        public IActionResult Profile() => View();
+        [Authorize]
+        public IActionResult Index() => View(GetUsersBasedOnRole());
+        [Authorize]
+        public IActionResult ChangePassword() => View();
+
+
         [HttpPost]
         public async Task<IActionResult> Login([FromForm]LoginViewModel loginViewModel)
         {
@@ -56,21 +70,13 @@ namespace Emit.Web.Controllers
             await userManager.LogOut();
             return RedirectToAction("Login");
         }
-        [HttpGet]
-        public IActionResult Register()
-        {
-            return View();
-        }
+  
         public IActionResult Register(RegisterUserDto user)
         {
             userService.RegisterNewUser(user);
             return View();
         }
-        [HttpGet]
-        public IActionResult ForgotPassword()
-        {
-            return View();
-        }
+  
         [HttpGet]
         public IActionResult ConfirmEmail(string email, string token)
         {
@@ -79,16 +85,8 @@ namespace Emit.Web.Controllers
                 return RedirectToAction("Login");
             return View();
         }
-        [Authorize]
-        public IActionResult Profile()
-        {
-            return View();
-        }
-        [Authorize]
-        public IActionResult Index()
-        {
-            return View(GetUsersBasedOnRole());
-        }
+
+ 
         [HttpGet("user/{id}/edit")]
         public IActionResult Edit(long id)
         {
@@ -106,10 +104,6 @@ namespace Emit.Web.Controllers
         public IActionResult Details()
         {
             return View(userService.GetUser(User.GetId<long>()));
-        }
-        public IActionResult ChangePassword()
-        {
-            return View();
         }
         [HttpPost]
         public async Task<IActionResult> ChangePassword([FromForm]ChangePassword changePassword)

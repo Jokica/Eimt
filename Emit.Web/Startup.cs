@@ -59,6 +59,10 @@ namespace Emit.Web
                .AddCookie(options =>
                {
                    options.LoginPath = "/user/login";
+               }).AddGitHub(options=>
+               {
+                   options.ClientId = "d367a249779a14bede86";
+                   options.ClientSecret = "6f8dad660853280fd6395ef9525f6c45e3b51579";
                });
             services.AddSignalR();
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();

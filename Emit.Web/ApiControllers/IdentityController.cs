@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,6 +7,7 @@ using Eimt.Application.Services.Dtos;
 using Eimt.Application.Services.ResultModels;
 using Eimt.Application.Services.ViewModels;
 using Emit.Web.ClaimsPrincipalExtensions;
+using Emit.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -56,6 +57,18 @@ namespace Emit.Web.ApiControllers
         public IActionResult Delete([FromRoute]long id)
         {
             service.DeleteUser(id);
+            return NoContent();
+        }
+        [Authorize]
+        [HttpPost("/{id}/updateinfo")]
+        public IActionResult UpdateInfo([FromRoute]long id,[FromBody] UpdateInfoViewModel updateInfoViewModel)
+        {
+            return NoContent();
+        }
+        [Authorize]
+        [HttpPost("/{id}/addtosector")]
+        public IActionResult AddToSector([FromRoute]long id,[FromBody] string Sector)
+        {
             return NoContent();
         }
     }
